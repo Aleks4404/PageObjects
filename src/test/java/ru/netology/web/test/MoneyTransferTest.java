@@ -80,7 +80,7 @@ class MoneyTransferTest {
 
   @Test
   void shouldTransferAnAmountGreaterThanTheLimitFromTheFirstCard() {
-    val amount = 20_000;
+    val amount = 40_000;
     val loginPage = new LoginPage();
     val authInfo = DataHelper.getAuthInfo();
     val verificationPage = loginPage.validLogin(authInfo);
@@ -103,7 +103,7 @@ class MoneyTransferTest {
 
   @Test
   void shouldTransferAnAmountGreaterThanTheLimitFromTheSecondCard() {
-    val amount = 20_000;
+    val amount = 40_000;
     val loginPage = new LoginPage();
     val authInfo = DataHelper.getAuthInfo();
     val verificationPage = loginPage.validLogin(authInfo);
