@@ -1,22 +1,42 @@
 package ru.netology.web.test;
 
+import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.web.data.DataHelper;
 import ru.netology.web.page.LoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class MoneyTransferTest {
 
-  @Test
-  void shouldTransferMoneyBetweenOwnCardsV2() {
+  @BeforeEach
+  public void setUp() {
     open("http://localhost:9999");
-    var loginPage = new LoginPage();
-//    var loginPage = open("http://localhost:9999", LoginPage.class);
-    var authInfo = DataHelper.getAuthInfo();
-    var verificationPage = loginPage.validLogin(authInfo);
-    var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-    verificationPage.validVerify(verificationCode);
+  }
+
+  @Test
+  void shouldTransferFromSecondToFirstCard() {
+    val amount = 100;
+    val loginPage = new LoginPage();
+    val authInfo = DataHelper.getAuthInfo();
+    val verificationPage = loginPage.validLogin(authInfo);
+    val verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+    val dashboardPage = verificationPage.validVerify(verificationCode);
+    dashboardPage.checkHeadingYourCards();
+    val initialBalanceToCard = dashboardPage.getFirstCardBalance();
+    val initialBalanceFromCard = dashboardPage.getSecondCardBalance();
+    val transferPage = dashboardPage.validChoosePay1();
+    transferPage.checkHeadingPaymentCards();
+    transferPage.setPayCardNumber(DataHelper.getSecondCard(), amount);
+    val dashboardPage1 = transferPage.validPayCard();
+    val actual = dashboardPage1.getFirstCardBalance();
+    val expected = initialBalanceToCard + amount;
+    val actual2 = dashboardPage1.getSecondCardBalance();
+    val expected2 = initialBalanceFromCard - amount;
+    assertEquals(expected, actual);
+    assertEquals(expected2, actual2);
   }
 }
-
