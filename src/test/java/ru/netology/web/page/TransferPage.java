@@ -31,4 +31,8 @@ public class TransferPage {
     public void invalidPayCard() {
         $("[data-test-id=error-notification] .notification__content").shouldHave(text("Произошла ошибка"));
     }
+
+    public void validPayExtendAmount() {
+        $("[data-test-id=error-notification] .notification__content").shouldHave(text("Недостаточно средств на карте"));
+    }
 }
